@@ -4,6 +4,17 @@ import SudokuTable from './SudokuTable';
 
 function App()
 {
+  const input = [
+    [1, 0, 3, 6, 0, 4, 7, 0, 9],
+    [0, 2, 0, 0, 9, 0, 0, 1, 0],
+    [7, 0, 0, 0, 0, 0, 0, 0, 6],
+    [2, 0, 4, 0, 3, 0, 9, 0, 8],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [5, 0, 0, 9, 0, 7, 0, 0, 1],
+    [6, 0, 0, 0, 5, 0, 0, 0, 2],
+    [0, 0, 0, 0, 7, 0, 0, 0, 0],
+    [9, 0, 0, 8, 0, 2, 0, 0, 5]
+  ]
   return (
     <div className="App">
       <header className="App-header">
@@ -11,7 +22,7 @@ function App()
         <p>Sudoku Solver</p>
       </header>
 
-      <SudokuTable />
+      <SudokuTable input={input}/>
     </div>
   );
 }
