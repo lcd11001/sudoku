@@ -1,5 +1,6 @@
 import logo from './logo.svg';
 import './App.css';
+import SudokuTable from './SudokuTable';
 
 function App()
 {
@@ -9,6 +10,8 @@ function App()
         <img src={logo} className="App-logo" alt="logo" />
         <p>Sudoku Solver</p>
       </header>
+
+      <SudokuTable />
     </div>
   );
 }

@@ -28,11 +28,6 @@
   color: #61dafb;
 }
 
-.App-title {
-  font-size: calc(10px + 3vmin);
-  color: blue;
-}
-
 @keyframes App-logo-spin {
   from {
     transform: rotate(0deg);
@@ -40,4 +35,24 @@
   to {
     transform: rotate(360deg);
   }
+}
+
+.Table {
+  border-collapse: collapse;
+}
+
+.Table-colgroup {
+  border: solid medium;
+}
+
+.Table-body {
+  border: solid medium;
+}
+
+.Table-data {
+  border: solid thin;
+  height: 1.4em;
+  width: 1.4em;
+  text-align: center;
+  padding: 0;
 }
