@@ -42,17 +42,25 @@
 }
 
 .Table-colgroup {
-  border: solid medium;
+  border: solid medium black;
 }
 
 .Table-body {
-  border: solid medium;
+  border: solid medium black;
 }
 
 .Table-data {
-  border: solid thin;
+  border: solid thin black;
   height: 1.4em;
   width: 1.4em;
   text-align: center;
   padding: 0;
+}
+
+.data-input {
+  color: red
+}
+
+.data-output {
+  color: blue;
 }

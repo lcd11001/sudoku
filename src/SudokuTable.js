@@ -1,10 +1,9 @@
 import React from "react";
 import './App.css'
 
-const TABLE_SIZE = 9
-const TABLE_BOX = 3
+import { TABLE_BOX, TABLE_SIZE } from "./SudokuSolver";
 
-const SudokuTable = ({ input }) =>
+const SudokuTable = ({ input, output }) =>
 {
     return (
         <table className="Table">
@@ -43,9 +42,16 @@ const SudokuTable = ({ input }) =>
                                                     let row = i * TABLE_BOX + j;
                                                     let col = k;
                                                     let value = input[row][col]
+                                                    if (value !== 0)
+                                                    {
+                                                        return (
+                                                            <td key={k} className="Table-data data-input">{value}</td>
+                                                        )
+                                                    }
 
+                                                    let solver = output ? output[row][col] : ''
                                                     return (
-                                                        <td key={k} className="Table-data">{value != 0 ? value : ''}</td>
+                                                        <td key={k} className="Table-data data-output">{solver}</td>
                                                     )
                                                 })
                                             }

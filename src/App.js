@@ -1,6 +1,7 @@
 import logo from './logo.svg';
 import './App.css';
 import SudokuTable from './SudokuTable';
+import { solver } from './SudokuSolver'
 
 function App()
 {
@@ -15,6 +16,9 @@ function App()
     [0, 0, 0, 0, 7, 0, 0, 0, 0],
     [9, 0, 0, 8, 0, 2, 0, 0, 5]
   ]
+
+  const output = solver(input)
+
   return (
     <div className="App">
       <header className="App-header">
@@ -22,7 +26,8 @@ function App()
         <p>Sudoku Solver</p>
       </header>
 
-      <SudokuTable input={input}/>
+      <SudokuTable input={input} output={output} />
+
     </div>
   );
 }
