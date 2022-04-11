@@ -1,6 +1,11 @@
 const TABLE_SIZE = 9
 const TABLE_BOX = 3
 
+const emptyTable = Array(TABLE_SIZE).fill().map(_ =>
+{
+    return Array(TABLE_SIZE).fill(0)
+})
+
 const isNumberInRow = (board, number, row) =>
 {
     for (var i = 0; i < TABLE_SIZE; i++)
@@ -47,7 +52,7 @@ const isNumberValid = (board, number, row, column) =>
     return !isNumberInRow(board, number, row) && !isNumberInColumn(board, number, column) && !isNumberInBox(board, number, row, column)
 }
 
-const solverNumber = (board, stackCount) =>
+const solverNumber = async (board, stackCount, hook, ms) =>
 {
     console.log('solverNumber called', stackCount[0])
     // because of roll back, we MUST store stack count as reference variable
@@ -64,9 +69,14 @@ const solverNumber = (board, stackCount) =>
                     if (isNumberValid(board, number, i, j))
                     {
                         board[i][j] = number
+                        if (hook)
+                        {
+                            hook(deepCopy(board))
+                            await timer(ms)
+                        }
                         // console.log(`board success ${i} ${j} ${number}`, print(board))
 
-                        if (solverNumber(board, stackCount))
+                        if (await solverNumber(board, stackCount, hook, ms))
                         {
                             return true
                         }
@@ -77,6 +87,11 @@ const solverNumber = (board, stackCount) =>
                     }
                 }
 
+                if (hook)
+                {
+                    hook(deepCopy(board))
+                    await timer(ms)
+                }
                 // console.log(`board fail ${i} ${j}`, print(board))
                 return false
             }
@@ -85,17 +100,15 @@ const solverNumber = (board, stackCount) =>
     return true
 }
 
-const solver = (inputBoard) =>
+const solver = async (inputBoard, hook, ms) =>
 {
-    var outputBoard = inputBoard.map(arr =>
-    {
-        return arr.slice()
-    })
+    var outputBoard = deepCopy(inputBoard)
 
-    if (solverNumber(outputBoard, [1]))
+    if (solverNumber(outputBoard, [1], hook, ms))
     {
         return outputBoard
     }
+
     return null
 }
 
@@ -127,15 +140,12 @@ const generateNumber = async (board, totalNumber, stackCount, hook, ms) =>
 
 const generate = async (difficult, hook, ms) =>
 {
-    var emptyTable = Array(TABLE_SIZE).fill().map(_ =>
-    {
-        return Array(TABLE_SIZE).fill(0)
-    })
+    var output = deepCopy(emptyTable)
 
     var totalNumber = Math.round(difficult * 1.0 * TABLE_SIZE * TABLE_SIZE / 100.0)
-    await generateNumber(emptyTable, totalNumber, 1, hook, ms)
+    await generateNumber(output, totalNumber, 1, hook, ms)
 
-    return emptyTable
+    return output
 }
 
 const deepCopy = (board) =>
@@ -160,5 +170,7 @@ export
     TABLE_BOX,
     TABLE_SIZE,
     solver,
-    generate
+    generate,
+    deepCopy,
+    emptyTable
 }

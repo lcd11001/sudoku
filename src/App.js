@@ -1,13 +1,8 @@
 import logo from './logo.svg';
 import './App.css';
 import SudokuTable from './SudokuTable';
-import { solver, generate, TABLE_SIZE } from './SudokuSolver'
+import { solver, generate, TABLE_SIZE, deepCopy, emptyTable } from './SudokuSolver'
 import { useEffect, useState } from 'react';
-
-const emptyTable = Array(TABLE_SIZE).fill().map(_ =>
-{
-  return Array(TABLE_SIZE).fill(0)
-})
 
 function App()
 {
@@ -44,13 +39,34 @@ function App()
 
   // const output = solver(input)
 
-  const [input, setInput] = useState(emptyTable)
-  const [output, setOutput] = useState(emptyTable)
+  const [input, setInput] = useState(deepCopy(emptyTable))
+  const [output, setOutput] = useState(deepCopy(emptyTable))
 
   useEffect(() =>
   {
-    console.log('generate input')
-    generate(30, setInput, 200)
+    async function waitGenerate()
+    {
+      console.log('waitGenerate')
+      const resultInput = await generate(30, setInput, 200)
+      return resultInput
+    }
+
+    async function waitSolver(resultInput)
+    {
+      console.log('waitSolver')
+      const resultOutput = await solver(resultInput, setOutput, 0)
+      return resultOutput
+    }
+
+    waitGenerate()
+      .then(resultInput =>
+      {
+        return waitSolver(resultInput)
+      })
+      .then(resultOutput =>
+      {
+        console.log('Finish', resultOutput)
+      })
   }, [])
 
   return (
@@ -60,7 +76,9 @@ function App()
         <p>Sudoku Solver</p>
       </header>
 
-      <SudokuTable input={input} output={output} />
+      <div className="App-content">
+        <SudokuTable input={input} output={output} />
+      </div>
 
     </div>
   );

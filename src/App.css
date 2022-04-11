@@ -1,5 +1,8 @@
 .App {
   text-align: center;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
 }
 
 .App-logo {
@@ -22,6 +25,14 @@
   justify-content: center;
   font-size: calc(10px + 2vmin);
   color: white;
+}
+
+.App-content {
+  display: flex;
+  flex: 1;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
 }
 
 .App-link {
@@ -51,10 +62,11 @@
 
 .Table-data {
   border: solid thin black;
-  height: 1.4em;
-  width: 1.4em;
+  height: 3.0em;
+  width: 3.0em;
   text-align: center;
   padding: 0;
+  font-size: 1.5em;
 }
 
 .data-input {
