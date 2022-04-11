@@ -47,8 +47,12 @@ const isNumberValid = (board, number, row, column) =>
     return !isNumberInRow(board, number, row) && !isNumberInColumn(board, number, column) && !isNumberInBox(board, number, row, column)
 }
 
-const solverNumber = (board) =>
+const solverNumber = (board, stackCount) =>
 {
+    console.log('solverNumber called', stackCount[0])
+    // because of roll back, we MUST store stack count as reference variable
+    stackCount[0] = stackCount[0] + 1
+
     for (var i = 0; i < TABLE_SIZE; i++)
     {
         for (var j = 0; j < TABLE_SIZE; j++)
@@ -60,16 +64,20 @@ const solverNumber = (board) =>
                     if (isNumberValid(board, number, i, j))
                     {
                         board[i][j] = number
-                        if (!solverNumber(board))
-                        {
-                            board[i][j] = 0
-                        }
-                        else
+                        // console.log(`board success ${i} ${j} ${number}`, print(board))
+
+                        if (solverNumber(board, stackCount))
                         {
                             return true
                         }
+                        else
+                        {
+                            board[i][j] = 0
+                        }
                     }
                 }
+
+                // console.log(`board fail ${i} ${j}`, print(board))
                 return false
             }
         }
@@ -84,16 +92,62 @@ const solver = (inputBoard) =>
         return arr.slice()
     })
 
-    if (solverNumber(outputBoard))
+    if (solverNumber(outputBoard, [1]))
     {
         return outputBoard
     }
     return null
 }
 
+const generateNumber = (board, totalNumber, stackCount) =>
+{
+    console.log('generateNumber called', stackCount)
+    if (totalNumber === 0)
+    {
+        return true
+    }
+
+    let row = Math.floor(Math.random() * TABLE_SIZE)
+    let col = Math.floor(Math.random() * TABLE_SIZE)
+    let number = Math.floor(Math.random() * TABLE_SIZE) + 1
+
+    if (isNumberValid(board, number, row, col))
+    {
+        board[row][col] = number
+        totalNumber--
+    }
+
+    return generateNumber(board, totalNumber, stackCount + 1)
+}
+
+const generate = (difficult) =>
+{
+    var board = []
+    for (var i = 0; i < TABLE_SIZE; i++)
+    {
+        board.push(new Array(TABLE_SIZE).fill(0))
+    }
+
+    var totalNumber = Math.round(difficult * 1.0 * TABLE_SIZE * TABLE_SIZE / 100.0)
+    generateNumber(board, totalNumber, 1)
+
+    return board
+}
+
+const print = (board) =>
+{
+    var printBoard = board.map(arr =>
+    {
+        return arr.slice()
+    })
+
+    console.log(printBoard)
+}
+
 export
 {
     TABLE_BOX,
     TABLE_SIZE,
-    solver
+    solver,
+    generate
 }
