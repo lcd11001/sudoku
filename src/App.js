@@ -2,7 +2,7 @@ import logo from './logo.svg';
 import './App.css';
 import SudokuTable from './SudokuTable';
 import { solver, generate, TABLE_SIZE } from './SudokuSolver'
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 const emptyTable = Array(TABLE_SIZE).fill().map(_ =>
 {
@@ -46,6 +46,12 @@ function App()
 
   const [input, setInput] = useState(emptyTable)
   const [output, setOutput] = useState(emptyTable)
+
+  useEffect(() =>
+  {
+    console.log('generate input')
+    generate(30, setInput, 200)
+  }, [])
 
   return (
     <div className="App">

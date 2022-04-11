@@ -49,7 +49,7 @@ const SudokuTable = ({ input, output }) =>
                                                         )
                                                     }
 
-                                                    let solver = output ? output[row][col] : ''
+                                                    let solver = output && output[row][col] !== 0 ? output[row][col] : ''
                                                     return (
                                                         <td key={k} className="Table-data data-output">{solver}</td>
                                                     )

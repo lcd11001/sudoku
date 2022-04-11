@@ -99,7 +99,7 @@ const solver = (inputBoard) =>
     return null
 }
 
-const generateNumber = (board, totalNumber, stackCount) =>
+const generateNumber = async (board, totalNumber, stackCount, hook, ms) =>
 {
     console.log('generateNumber called', stackCount)
     if (totalNumber === 0)
@@ -114,35 +114,46 @@ const generateNumber = (board, totalNumber, stackCount) =>
     if (isNumberValid(board, number, row, col))
     {
         board[row][col] = number
+        if (hook)
+        {
+            hook(deepCopy(board))
+            await timer(ms)
+        }
         totalNumber--
     }
 
-    return generateNumber(board, totalNumber, stackCount + 1)
+    return generateNumber(board, totalNumber, stackCount + 1, hook, ms)
 }
 
-const generate = (difficult) =>
+const generate = async (difficult, hook, ms) =>
 {
-    var board = []
-    for (var i = 0; i < TABLE_SIZE; i++)
+    var emptyTable = Array(TABLE_SIZE).fill().map(_ =>
     {
-        board.push(new Array(TABLE_SIZE).fill(0))
-    }
+        return Array(TABLE_SIZE).fill(0)
+    })
 
     var totalNumber = Math.round(difficult * 1.0 * TABLE_SIZE * TABLE_SIZE / 100.0)
-    generateNumber(board, totalNumber, 1)
+    await generateNumber(emptyTable, totalNumber, 1, hook, ms)
 
-    return board
+    return emptyTable
+}
+
+const deepCopy = (board) =>
+{
+    return board.map(arr =>
+    {
+        return arr.slice()
+    })
 }
 
 const print = (board) =>
 {
-    var printBoard = board.map(arr =>
-    {
-        return arr.slice()
-    })
-
+    var printBoard = deepCopy(board)
     console.log(printBoard)
 }
+
+// return a promise that resolve after "ms" miliseconds
+const timer = ms => new Promise(resolve => setTimeout(resolve, ms))
 
 export
 {
