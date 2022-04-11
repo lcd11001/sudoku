@@ -54,7 +54,7 @@ function App()
     async function waitSolver(resultInput)
     {
       console.log('waitSolver')
-      const resultOutput = await solver(resultInput, setOutput, 0)
+      const resultOutput = await solver(resultInput, setOutput, 10)
       return resultOutput
     }
 

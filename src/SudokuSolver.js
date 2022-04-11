@@ -49,7 +49,10 @@ const isNumberInBox = (board, number, row, column) =>
 
 const isNumberValid = (board, number, row, column) =>
 {
-    return !isNumberInRow(board, number, row) && !isNumberInColumn(board, number, column) && !isNumberInBox(board, number, row, column)
+    return board[row][column] === 0
+        && !isNumberInRow(board, number, row)
+        && !isNumberInColumn(board, number, column)
+        && !isNumberInBox(board, number, row, column)
 }
 
 const solverNumber = async (board, stackCount, hook, ms) =>
@@ -69,7 +72,7 @@ const solverNumber = async (board, stackCount, hook, ms) =>
                     if (isNumberValid(board, number, i, j))
                     {
                         board[i][j] = number
-                        if (hook)
+                        if (hook && ms > 0)
                         {
                             hook(deepCopy(board))
                             await timer(ms)
@@ -87,15 +90,15 @@ const solverNumber = async (board, stackCount, hook, ms) =>
                     }
                 }
 
-                if (hook)
-                {
-                    hook(deepCopy(board))
-                    await timer(ms)
-                }
                 // console.log(`board fail ${i} ${j}`, print(board))
                 return false
             }
         }
+    }
+
+    if (hook)
+    {
+        hook(deepCopy(board))
     }
     return true
 }
@@ -104,7 +107,7 @@ const solver = async (inputBoard, hook, ms) =>
 {
     var outputBoard = deepCopy(inputBoard)
 
-    if (solverNumber(outputBoard, [1], hook, ms))
+    if (await solverNumber(outputBoard, [1], hook, ms))
     {
         return outputBoard
     }
@@ -117,6 +120,10 @@ const generateNumber = async (board, totalNumber, stackCount, hook, ms) =>
     console.log('generateNumber called', stackCount)
     if (totalNumber === 0)
     {
+        if (hook)
+        {
+            hook(deepCopy(board))
+        }
         return true
     }
 
@@ -127,7 +134,7 @@ const generateNumber = async (board, totalNumber, stackCount, hook, ms) =>
     if (isNumberValid(board, number, row, col))
     {
         board[row][col] = number
-        if (hook)
+        if (hook && ms > 0)
         {
             hook(deepCopy(board))
             await timer(ms)
