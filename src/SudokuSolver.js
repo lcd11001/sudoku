@@ -74,7 +74,7 @@ const solverNumber = async (board, stackCount, hook, ms) =>
                         board[i][j] = number
                         if (hook && ms > 0)
                         {
-                            hook(deepCopy(board))
+                            hook(board, stackCount[0])
                             await timer(ms)
                         }
                         // console.log(`board success ${i} ${j} ${number}`, print(board))
@@ -98,18 +98,16 @@ const solverNumber = async (board, stackCount, hook, ms) =>
 
     if (hook)
     {
-        hook(deepCopy(board))
+        hook(board, stackCount[0])
     }
     return true
 }
 
-const solver = async (inputBoard, hook, ms) =>
+const solver = async (board, hook, ms) =>
 {
-    var outputBoard = deepCopy(inputBoard)
-
-    if (await solverNumber(outputBoard, [1], hook, ms))
+    if (await solverNumber(board, [1], hook, ms))
     {
-        return outputBoard
+        return board
     }
 
     return null
@@ -122,7 +120,7 @@ const generateNumber = async (board, totalNumber, stackCount, hook, ms) =>
     {
         if (hook)
         {
-            hook(deepCopy(board))
+            hook(board, stackCount)
         }
         return true
     }
@@ -136,7 +134,7 @@ const generateNumber = async (board, totalNumber, stackCount, hook, ms) =>
         board[row][col] = number
         if (hook && ms > 0)
         {
-            hook(deepCopy(board))
+            hook(board, stackCount)
             await timer(ms)
         }
         totalNumber--
@@ -145,14 +143,12 @@ const generateNumber = async (board, totalNumber, stackCount, hook, ms) =>
     return generateNumber(board, totalNumber, stackCount + 1, hook, ms)
 }
 
-const generate = async (difficult, hook, ms) =>
+const generate = async (board, difficult, hook, ms) =>
 {
-    var output = deepCopy(emptyTable)
-
     var totalNumber = Math.round(difficult * 1.0 * TABLE_SIZE * TABLE_SIZE / 100.0)
-    await generateNumber(output, totalNumber, 1, hook, ms)
+    await generateNumber(board, totalNumber, 1, hook, ms)
 
-    return output
+    return board
 }
 
 const deepCopy = (board) =>

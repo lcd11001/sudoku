@@ -39,22 +39,39 @@ function App()
 
   // const output = solver(input)
 
+  const [stackCount, setStackCount] = useState(0)
   const [input, setInput] = useState(deepCopy(emptyTable))
   const [output, setOutput] = useState(deepCopy(emptyTable))
+
+  const refresh = (board, count) =>
+  {
+    // setInput(board)
+    setStackCount(count)
+  }
 
   useEffect(() =>
   {
     async function waitGenerate()
     {
       console.log('waitGenerate')
-      const resultInput = await generate(20, setInput, 200)
+      const resultInput = await generate(input, 20, refresh, 200)
       return resultInput
     }
 
     async function waitSolver(resultInput)
     {
       console.log('waitSolver')
-      const resultOutput = await solver(resultInput, setOutput, 10)
+
+      // optimize useEffect
+      for (var i = 0; i < TABLE_SIZE; i++)
+      {
+        for (var j = 0; j < TABLE_SIZE; j++)
+        {
+          output[i][j] = resultInput[i][j]
+        }
+      }
+
+      const resultOutput = await solver(output, refresh, 10)
       return resultOutput
     }
 
