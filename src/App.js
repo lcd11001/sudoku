@@ -47,7 +47,7 @@ function App()
     async function waitGenerate()
     {
       console.log('waitGenerate')
-      const resultInput = await generate(30, setInput, 200)
+      const resultInput = await generate(20, setInput, 200)
       return resultInput
     }
 
